@@ -14,7 +14,7 @@ def index(request):
 @login_required
 def topics(request):
     topics = Topic.objects.filter(owner=request.user).order_by('date_added')
-    context = {'topics': topics}
+    context = {'topics': topics, 'title': 'Learning Log'}
     return render(request, 'learning_logs/topics.html', context)
 
 
@@ -24,7 +24,7 @@ def topic(request, topic_id):
     if topic.owner != request.user:
         raise Http404
     entries = topic.entry_set.order_by('-date_added')
-    context = {'topic': topic, 'entries': entries}
+    context = {'topic': topic, 'entries': entries, 'title': 'Topic'}
     return render(request, 'learning_logs/topic.html', context)
 
 
@@ -41,7 +41,7 @@ def new_topic(request):
             form.save()
             return redirect('learning_logs:topics')
 
-    context = {'form': form}
+    context = {'form': form, 'title': 'New topic'}
     return render(request, 'learning_logs/new_topic.html', context)
 
 
@@ -60,7 +60,7 @@ def new_entry(request, topic_id):
             new_entry.save()
             return redirect('learning_logs:topic', topic_id=topic_id)
 
-    context = {'topic': topic, 'form': form}
+    context = {'topic': topic, 'form': form, 'title': 'New entry'}
     return render(request, 'learning_logs/new_entry.html', context)
 
 
@@ -79,5 +79,5 @@ def edit_entry(request, entry_id):
             form.save()
             return redirect('learning_logs:topic', topic_id=topic.id)
 
-    context = {'entry': entry, 'topic': topic, 'form': form}
+    context = {'entry': entry, 'topic': topic, 'form': form, 'title': 'Edit Entry'}
     return render(request, 'learning_logs/edit_entry.html', context)
